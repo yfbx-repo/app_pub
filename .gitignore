@@ -3,6 +3,8 @@
 .packages
 *.json
 *.cer
+*.apk
+update.txt
 
 # Conventional directory for build outputs
 build/

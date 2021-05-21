@@ -1,7 +1,8 @@
 import 'dart:io';
 
 import 'package:g_json/g_json.dart';
-import 'package:path/path.dart' as path;
+
+import 'env.dart';
 
 ///
 /// 配置信息
@@ -10,7 +11,7 @@ class Configs {
   JSON _json;
 
   Configs._() {
-    final filePath = '${path.current}${path.separator}configs.json';
+    final filePath = '${env.currentPath}configs.json';
     final jsonStr = File(filePath).readAsStringSync();
     _json = JSON.parse(jsonStr);
   }
@@ -22,10 +23,8 @@ class Configs {
   ///Xiaomi
   String get username => _json['xiaomi']['username'].stringValue;
   String get password => _json['xiaomi']['password'].stringValue;
-  String get pubKey {
-    return File('${path.current}${path.separator}xiaomi_pub_key.cer')
-        .readAsStringSync();
-  }
+  String get pubKey =>
+      File('${env.currentPath}xiaomi_pub_key.cer').readAsStringSync();
 }
 
 final configs = _initConfigs();
