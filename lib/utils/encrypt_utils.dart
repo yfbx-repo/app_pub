@@ -1,8 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:crypto/crypto.dart';
-import 'package:encrypt/encrypt.dart';
-import 'package:pointycastle/asymmetric/api.dart';
+import 'package:hex/hex.dart';
+import 'package:x509/x509.dart';
 
 ///
 /// 字符串MD5
@@ -21,9 +22,10 @@ String fileMD5(List<int> data) {
 ///
 /// RSA 加密
 ///
-String RSAEncode(String text, String pubKey) {
-  final key = pubKey.replaceAll('CERTIFICATE', 'RSA PUBLIC KEY');
-  final publicKey = RSAKeyParser().parse(key) as RSAPublicKey;
-  final encrypter = Encrypter(RSA(publicKey: publicKey));
-  return encrypter.encrypt(text).base64;
+String RSAEncode(String text, String cert) {
+  final x509Cert = parsePem(cert).first as X509Certificate;
+  final publicKey = x509Cert.publicKey;
+  final encrypter = publicKey.createEncrypter(algorithms.encryption.rsa.pkcs1);
+  final encoded = encrypter.encrypt(utf8.encode(text)).data;
+  return HEX.encode(encoded);
 }
