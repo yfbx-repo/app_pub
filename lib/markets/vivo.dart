@@ -6,26 +6,20 @@ import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:g_json/g_json.dart';
+import 'package:market/utils/configs.dart';
 import 'package:market/utils/tools.dart';
 import 'package:path/path.dart' as path;
 
 final vivo = _initVivo();
 
-VIVO _initVivo() => VIVO();
+VIVO _initVivo() => VIVO._();
 
 class VIVO {
-  ///正式环境
   final serverUrl = 'https://developer-api.vivo.com.cn/router/rest';
-  var accessKey = '20210519cby0y65b';
-  var accessSecret = '01b3167905e711eabae6d0946672c4fb';
+  final accessKey = configs.accessKey;
+  final accessSecret = configs.accessSecret;
 
-  VIVO() {
-    //TODO:配置
-    // final property = File('vivo.json').readAsStringSync();
-    // final prop = JSON.parse(property);
-    // accessKey = prop['accessKey'].stringValue;
-    // accessSecret = prop['accessSecret'].stringValue;
-  }
+  VIVO._();
 
   ///
   /// 更新
