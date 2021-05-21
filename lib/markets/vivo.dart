@@ -15,9 +15,9 @@ final vivo = _initVivo();
 VIVO _initVivo() => VIVO._();
 
 class VIVO {
-  final serverUrl = 'https://developer-api.vivo.com.cn/router/rest';
-  final accessKey = configs.accessKey;
-  final accessSecret = configs.accessSecret;
+  final _serverUrl = 'https://developer-api.vivo.com.cn/router/rest';
+  final _accessKey = configs.accessKey;
+  final _accessSecret = configs.accessSecret;
 
   VIVO._();
 
@@ -105,13 +105,13 @@ class VIVO {
       'method': method,
       'target_app_key': 'developer',
       'sign_method': 'hmac',
-      'access_key': accessKey,
+      'access_key': _accessKey,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
     };
     //业务参数
     formMap.addAll(args);
     //签名参数
-    formMap['sign'] = sign(formMap, accessSecret);
+    formMap['sign'] = sign(formMap, _accessSecret);
 
     if (file != null) {
       formMap['file'] = file;
@@ -119,7 +119,7 @@ class VIVO {
 
     try {
       final response = await Dio().post(
-        serverUrl,
+        _serverUrl,
         data: FormData.fromMap(formMap),
       );
       return JSON.parse(response.toString());

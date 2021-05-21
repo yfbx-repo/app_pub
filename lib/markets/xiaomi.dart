@@ -12,20 +12,20 @@ final xiaomi = _initXiaomi();
 Xiaomi _initXiaomi() => Xiaomi._();
 
 class Xiaomi {
-  final serverUrl = 'http://api.developer.xiaomi.com/devupload';
-  final pubKey = configs.pubKey;
-  final password = configs.password;
-  final userName = configs.username;
+  final _serverUrl = 'http://api.developer.xiaomi.com/devupload';
+  final _pubKey = configs.pubKey;
+  final _password = configs.password;
+  final _userName = configs.username;
 
   Xiaomi._();
 
   ///
   /// 查询应用信息
   ///
-  void query(String userName, String packageName) async {
+  void query(String packageName) async {
     final json = await post(method: '/dev/query', args: {
       'packageName': packageName,
-      'userName': userName,
+      'userName': _userName,
     });
 
     print(json['message'].stringValue);
@@ -64,14 +64,14 @@ class Xiaomi {
     }
 
     //组装加密参数
-    final sign = JSON({'password': password, 'sig': sigs});
+    final sign = JSON({'password': _password, 'sig': sigs});
 
     //将组装好的加密参数进行RSA加密，并添加到最终参数中
-    args['SIG'] = RSAEncode(sign.rawString(), pubKey);
+    args['SIG'] = RSAEncode(sign.rawString(), _pubKey);
 
     try {
       final response = await Dio().post(
-        serverUrl + method,
+        _serverUrl + method,
         data: FormData.fromMap(args),
       );
       return JSON.parse(response.toString());
