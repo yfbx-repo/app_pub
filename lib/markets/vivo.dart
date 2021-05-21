@@ -6,8 +6,9 @@ import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:g_json/g_json.dart';
+import 'package:market/utils/apk.dart';
 import 'package:market/utils/configs.dart';
-import 'package:market/utils/tools.dart';
+import 'package:market/utils/encrypt_utils.dart';
 import 'package:path/path.dart' as path;
 
 final vivo = _initVivo();
@@ -29,10 +30,10 @@ class VIVO {
     final apkName = path.basename(apk.path);
     final filePart = await MultipartFile.fromFile(apk.path, filename: apkName);
     print('获取文件MD5:');
-    final md5Code = md5.convert(apk.readAsBytesSync()).toString();
+    final md5Code = fileMD5(apk.readAsBytesSync());
     print(md5Code);
     print('解析Package信息:');
-    final pkgInfo = getPackageInfo(apk);
+    final pkgInfo = apk.packageInfo;
     final packageName = pkgInfo['packageName'].stringValue;
     final versionCode = pkgInfo['versionCode'];
 

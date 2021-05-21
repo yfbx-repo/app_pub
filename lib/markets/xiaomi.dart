@@ -1,11 +1,10 @@
-import 'dart:convert';
 import 'dart:io';
 
-import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
-import 'package:encrypt/encrypt.dart';
 import 'package:g_json/g_json.dart';
+import 'package:market/utils/apk.dart';
 import 'package:market/utils/configs.dart';
+import 'package:market/utils/encrypt_utils.dart';
 
 final xiaomi = _initXiaomi();
 
@@ -20,15 +19,36 @@ class Xiaomi {
   Xiaomi._();
 
   ///
+  ///更新
+  ///
+  void update(File apk, String updateDesc) async {
+    final json = await post(
+      method: '/dev/push',
+      files: {'apk': apk},
+      params: {
+        'synchroType': 1,
+        'userName': _userName,
+        'appInfo': {
+          'appName': apk.appName,
+          'packageName': apk.packageName,
+          'updateDesc': updateDesc,
+        },
+      },
+    );
+
+    print(json.rawString());
+  }
+
+  ///
   /// 查询应用信息
   ///
   void query(String packageName) async {
-    final json = await post(method: '/dev/query', args: {
+    final json = await post(method: '/dev/query', params: {
       'packageName': packageName,
       'userName': _userName,
     });
 
-    print(json['message'].stringValue);
+    print(json.rawString());
   }
 
   ///
@@ -36,17 +56,18 @@ class Xiaomi {
   ///
   Future<JSON> post({
     String method,
-    Map<String, dynamic> args, //参数为Json String
+    Map<String, dynamic> params,
     Map<String, File> files,
   }) async {
-    final sigs = [];
-    //将每一个参数进行MD5加密
-    args.forEach((key, value) {
-      sigs.add({
-        'name': key,
-        'hash': md5.convert(utf8.encode(value)).toString(),
-      });
-    });
+    final formMap = <String, dynamic>{};
+    //参数转json字符串
+    final requestData = JSON(params).rawString();
+    formMap['RequestData'] = requestData;
+
+    //参数签名
+    final sigs = [
+      {'name': 'RequestData', 'hash': MD5(requestData)}
+    ];
 
     //获取文件MD5值,并将文件转换为MultipartFile添加到参数中
     if (files != null && files.isNotEmpty) {
@@ -54,12 +75,9 @@ class Xiaomi {
         //读取文件
         final fileBytes = value.readAsBytesSync();
         //添加到参数中
-        args[key] = MultipartFile.fromBytes(fileBytes);
+        formMap[key] = MultipartFile.fromBytes(fileBytes);
         //获取MD5值
-        sigs.add({
-          'name': key,
-          'hash': md5.convert(fileBytes).toString(),
-        });
+        sigs.add({'name': key, 'hash': fileMD5(fileBytes)});
       });
     }
 
@@ -67,26 +85,17 @@ class Xiaomi {
     final sign = JSON({'password': _password, 'sig': sigs});
 
     //将组装好的加密参数进行RSA加密，并添加到最终参数中
-    args['SIG'] = RSAEncode(sign.rawString(), _pubKey);
+    formMap['SIG'] = RSAEncode(sign.rawString(), _pubKey);
 
     try {
       final response = await Dio().post(
         _serverUrl + method,
-        data: FormData.fromMap(args),
+        data: FormData.fromMap(formMap),
       );
       return JSON.parse(response.toString());
     } on Exception catch (e) {
       print('Xiaomi: $method 请求失败！\n$e');
       return JSON.nil;
     }
-  }
-
-  ///
-  /// RSA 加密
-  ///
-  String RSAEncode(String text, String pubKey) {
-    final publicKey = RSAKeyParser().parse(pubKey);
-    final encrypter = Encrypter(RSA(publicKey: publicKey));
-    return encrypter.encrypt(text).base64;
   }
 }
