@@ -1,14 +1,12 @@
 import 'dart:io';
 
-import 'package:args/args.dart';
 import 'package:market/markets/vivo.dart';
 import 'package:market/utils/args_util.dart';
 import 'package:market/utils/env.dart';
 import 'package:market/utils/tools.dart';
 
 void main(List<String> args) {
-  final argParser = ArgParser();
-  setCommonArgs(argParser);
+  final argParser = getCommonArgs();
   final result = argParser.parse(args);
   final help = result.getBool('help');
   final file = result.getString('file');

@@ -10,24 +10,10 @@ import 'package:market/utils/tools.dart';
 
 void main(List<String> args) {
   final argParser = ArgParser();
-  setCommonArgs(argParser);
-  argParser.addFlag(
-    'vivo',
-    negatable: false,
-    help: 'only publish to vivo market',
-  );
-  argParser.addFlag(
-    'huawei',
-    negatable: false,
-    help: 'only publish to huawei market',
-  );
-  argParser.addFlag(
-    'xiaomi',
-    negatable: false,
-    help: 'only publish to xiaomi market',
-  );
-
+  argParser.addCommand('publish', subCommand());
+  argParser.addCommand('query');
   final result = argParser.parse(args);
+
   final help = result.getBool('help');
   final onlyVivo = result.getBool('vivo');
   final onlyHuawei = result.getBool('huawei');
@@ -78,4 +64,24 @@ void update(File apk, String updateDesc) async {
   await vivo.update(apk, updateDesc);
   print('\n--> xiaomi');
   await xiaomi.update(apk, updateDesc);
+}
+
+ArgParser subCommand() {
+  final pubArgs = getCommonArgs();
+  pubArgs.addFlag(
+    'vivo',
+    negatable: false,
+    help: 'only publish to vivo market',
+  );
+  pubArgs.addFlag(
+    'huawei',
+    negatable: false,
+    help: 'only publish to huawei market',
+  );
+  pubArgs.addFlag(
+    'xiaomi',
+    negatable: false,
+    help: 'only publish to xiaomi market',
+  );
+  return pubArgs;
 }
