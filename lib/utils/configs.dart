@@ -25,6 +25,11 @@ class Configs {
   String get password => _json['xiaomi']['password'].stringValue;
   String get pubKey =>
       File('${env.currentPath}xiaomi_pub_key.cer').readAsStringSync();
+
+  ///Huawei
+  String get appId => _json['huawei']['appId'].stringValue;
+  String get clientId => _json['huawei']['clientId'].stringValue;
+  String get clientSecret => _json['huawei']['clientSecret'].stringValue;
 }
 
 final configs = _initConfigs();

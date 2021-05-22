@@ -25,8 +25,7 @@ class VIVO {
   ///
   /// 更新
   ///
-  void update(File apk, String updateDesc) async {
-    print('------------------------VIVO START----------------------');
+  Future update(File apk, String updateDesc) async {
     final apkName = path.basename(apk.path);
     final filePart = await MultipartFile.fromFile(apk.path, filename: apkName);
     print('获取文件MD5:');
@@ -73,14 +72,12 @@ class VIVO {
     );
 
     print(response['msg'].stringValue);
-
-    print('------------------------VIVO END----------------------');
   }
 
   ///
   /// 查询当前状态
   ///
-  void query(String packageName) async {
+  Future query(String packageName) async {
     final json = await post(
       method: 'app.query.task.status',
       args: {

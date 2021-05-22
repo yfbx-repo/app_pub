@@ -21,7 +21,7 @@ class Xiaomi {
   ///
   ///更新
   ///
-  void update(File apk, String updateDesc) async {
+  Future update(File apk, String updateDesc) async {
     final json = await post(
       method: '/dev/push',
       files: {'apk': apk},
@@ -42,7 +42,7 @@ class Xiaomi {
   ///
   /// 查询应用信息
   ///
-  void query(String packageName) async {
+  Future query(String packageName) async {
     final json = await post(method: '/dev/query', params: {
       'packageName': packageName,
       'userName': _userName,
