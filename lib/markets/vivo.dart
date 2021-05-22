@@ -79,14 +79,24 @@ class VIVO {
   ///
   Future query(String packageName) async {
     final json = await post(
-      method: 'app.query.task.status',
-      args: {
-        'packageName': packageName,
-        'packetType': 0,
-      },
+      method: 'app.query.details',
+      args: {'packageName': packageName},
     );
-    print('VIVO:');
-    print(json['msg'].stringValue);
+
+    if (json['code'].integer != 0 || json['subCode'].string != '0') {
+      print('${json['msg']}');
+      return;
+    }
+    final saleStatus = json['data']['saleStatus'].integerValue;
+    final status = json['data']['status'].integerValue;
+    final unPassReason = json['data']['unPassReason'].stringValue;
+
+    print('''
+    -----VIVO-----
+    上架状态：${getSaleStatus(saleStatus)}
+    审核状态：${getStatus(status)}
+    审核意见：$unPassReason
+    ''');
   }
 
   ///
@@ -151,5 +161,33 @@ class VIVO {
       paramList.add('$key=$value');
     }
     return paramList.join('&');
+  }
+
+  String getStatus(int status) {
+    switch (status) {
+      case 1:
+        return '草稿';
+      case 2:
+        return '待审核';
+      case 3:
+        return '审核通过';
+      case 4:
+        return '审核不通过';
+      default:
+        return '';
+    }
+  }
+
+  String getSaleStatus(int status) {
+    switch (status) {
+      case 0:
+        return '待上架';
+      case 1:
+        return '已上架';
+      case 2:
+        return '已下架';
+      default:
+        return '';
+    }
   }
 }

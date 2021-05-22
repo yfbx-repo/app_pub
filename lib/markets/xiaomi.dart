@@ -36,7 +36,10 @@ class Xiaomi {
       },
     );
 
-    print(json.rawString());
+    print('''
+    -----小米-----
+    ${json.rawString()}
+    ''');
   }
 
   ///

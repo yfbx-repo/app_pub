@@ -60,8 +60,6 @@ class Huawei {
       print('token 获取失败');
       return;
     }
-    print('token: $_token');
-
     final json = await _request(
       method: 'get',
       path: '/publish/v2/app-info',
@@ -73,24 +71,14 @@ class Huawei {
       return;
     }
 
-    final states = {
-      0: '已上架',
-      1: '上架审核不通过',
-      2: '已下架（含强制下架）',
-      3: '待上架，预约上架',
-      4: '审核中',
-      5: '升级中',
-      6: '申请下架',
-      7: '草稿',
-      8: '升级审核不通过',
-      9: '下架审核不通过',
-      10: '应用被开发者下架',
-      11: '撤销上架',
-    };
-    final releaseState = json['appInfo']['releaseState'].integerValue;
+    final state = json['appInfo']['releaseState'].integerValue;
     final auditOpinion = json['auditInfo']['auditOpinion'].stringValue;
-    print(states[releaseState]);
-    print(auditOpinion);
+
+    print('''
+    -----华为-----
+    状态：${getStatus(state)}
+    审核意见：$auditOpinion
+    ''');
   }
 
   ///
@@ -189,5 +177,23 @@ class Huawei {
       ),
     );
     return JSON.parse(response.toString());
+  }
+
+  String getStatus(int status) {
+    final states = {
+      0: '已上架',
+      1: '上架审核不通过',
+      2: '已下架（含强制下架）',
+      3: '待上架，预约上架',
+      4: '审核中',
+      5: '升级中',
+      6: '申请下架',
+      7: '草稿',
+      8: '升级审核不通过',
+      9: '下架审核不通过',
+      10: '应用被开发者下架',
+      11: '撤销上架',
+    };
+    return states[status];
   }
 }
