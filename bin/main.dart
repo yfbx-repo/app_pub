@@ -10,36 +10,56 @@ import 'package:market/utils/tools.dart';
 
 void main(List<String> args) {
   final argParser = ArgParser();
-  argParser.addCommand('publish', subCommand());
-  argParser.addCommand('query');
+  argParser.addCommand('publish', publishCommand());
+  argParser.addCommand('query', queryCommand());
+  argParser.addFlag(
+    'help',
+    abbr: 'h',
+    negatable: false,
+    help: 'Print this usage information',
+  );
   final result = argParser.parse(args);
+  final cmd = result.command;
 
-  final help = result.getBool('help');
-  final onlyVivo = result.getBool('vivo');
-  final onlyHuawei = result.getBool('huawei');
-  final onlyXiaomi = result.getBool('xiaomi');
+  final help = cmd.getBool('help');
+  final onlyVivo = cmd.getBool('vivo');
+  final onlyHuawei = cmd.getBool('huawei');
+  final onlyXiaomi = cmd.getBool('xiaomi');
+  final file = cmd.getString('file');
+  final desc = cmd.getString('desc');
+  final txt = cmd.getString('txt');
+  final package = cmd.getString('package');
 
-  final file = result.getString('file');
-  final desc = result.getString('desc');
-  final txt = result.getString('txt');
-
+  //print help info
   if (help == true) {
     print(argParser.usage);
     return;
   }
 
+  //check configs
   if (!env.isConfigsExist) {
     return;
   }
 
+  //query command
+  if (cmd.name == 'query') {
+    huawei.query();
+    xiaomi.query(package);
+    vivo.query(package);
+    return;
+  }
+
+  //check apk file
   final apk = file.isEmpty ? findApkInCurrentDir() : File(file);
   if (!apk.existsSync()) {
     print('Apk file not found.Try to use "-f <file path>"');
     return;
   }
 
+  //check update desc
   final updateDesc = desc.isEmpty ? readFile('$txt') : '$desc';
 
+  // publish to only one platform
   if (onlyVivo) {
     vivo.update(apk, updateDesc);
     return;
@@ -53,7 +73,7 @@ void main(List<String> args) {
     return;
   }
 
-  //all
+  //publish to all platform
   update(apk, updateDesc);
 }
 
@@ -66,7 +86,7 @@ void update(File apk, String updateDesc) async {
   await xiaomi.update(apk, updateDesc);
 }
 
-ArgParser subCommand() {
+ArgParser publishCommand() {
   final pubArgs = getCommonArgs();
   pubArgs.addFlag(
     'vivo',
@@ -84,4 +104,14 @@ ArgParser subCommand() {
     help: 'only publish to xiaomi market',
   );
   return pubArgs;
+}
+
+ArgParser queryCommand() {
+  final argParser = ArgParser();
+  argParser.addOption(
+    'package',
+    abbr: 'p',
+    help: 'package name of you app',
+  );
+  return argParser;
 }
