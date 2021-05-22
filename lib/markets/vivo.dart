@@ -8,7 +8,7 @@ import 'package:dio/dio.dart';
 import 'package:g_json/g_json.dart';
 import 'package:market/utils/apk.dart';
 import 'package:market/utils/configs.dart';
-import 'package:market/utils/encrypt_utils.dart';
+import 'package:market/utils/encrypt_util.dart';
 import 'package:path/path.dart' as path;
 
 final vivo = _initVivo();

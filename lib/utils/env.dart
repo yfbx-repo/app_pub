@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:path/path.dart' as path;
 
 final env = _initEnv();
@@ -11,4 +13,16 @@ class Env {
   ///当前工作路径
   ///
   String get currentPath => '${path.current}${path.separator}';
+
+  ///
+  /// 配置文件是否存在
+  ///
+  bool get isConfigsExist {
+    final file = File('${env.currentPath}configs.json');
+    if (file.existsSync()) return true;
+    print('"configs.json" is required to provide your platform private info');
+    return false;
+  }
+
+ 
 }
