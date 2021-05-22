@@ -23,8 +23,8 @@ class Huawei {
 
     //获取上传地址
     final urlReply = await _getUploadUrl();
-    if (urlReply['retcode'].integer != 0) {
-      print(urlReply['msg'].stringValue);
+    if (urlReply['ret']['code'].integer != 0) {
+      print(urlReply['ret']['msg'].stringValue);
       return;
     }
     final uploadUrl = urlReply['uploadUrl'].stringValue;
@@ -37,14 +37,14 @@ class Huawei {
     final fileInfoList = apkReply['UploadFileRsp']['fileInfoList'].listObject;
     //刷新APK
     final refreshReply = await _refreshApk(fileInfoList);
-    if (refreshReply['retcode'].integer != 0) {
-      print(refreshReply['msg'].stringValue);
+    if (refreshReply['ret']['code'].integer != 0) {
+      print(refreshReply['ret']['msg'].stringValue);
       return;
     }
     //更新文案
     final descReply = await _updateInfo(updateDesc);
-    if (descReply['retcode'].integer != 0) {
-      print(descReply['msg'].stringValue);
+    if (descReply['ret']['code'].integer != 0) {
+      print(descReply['ret']['msg'].stringValue);
       return;
     }
     final result = await _publish();
@@ -61,13 +61,15 @@ class Huawei {
       return;
     }
     print('token: $_token');
+
     final json = await _request(
       method: 'get',
       path: '/publish/v2/app-info',
-      // params: {'lang': 'zh-CN'},
+      params: {'lang': 'zh-CN'},
     );
-    if (json['retcode'].integer != 0) {
-      print(json['msg'].stringValue);
+
+    if (json['ret']['code'].integer != 0) {
+      print(json['ret']['msg'].stringValue);
       return;
     }
 
@@ -182,7 +184,7 @@ class Huawei {
         method: method,
         headers: {
           'client_id': configs.clientId,
-          'Authorization': 'Authorization: Bearer $_token',
+          'Authorization': 'Bearer $_token',
         },
       ),
     );
