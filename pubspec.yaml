@@ -23,6 +23,3 @@ dev_dependencies:
 
 executables:
   app: main
-  vivo: vivo
-  huawei: huawei
-  xiaomi: xiaomi

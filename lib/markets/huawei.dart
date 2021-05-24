@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:g_json/g_json.dart';
 import 'package:market/utils/configs.dart';
+import 'package:path/path.dart' as path;
 
 final huawei = _initHuawei();
 
@@ -14,6 +15,7 @@ class Huawei {
   Huawei._();
 
   Future update(File apk, String updateDesc) async {
+    final apkName = path.basename(apk.path);
     _token = await _getToken();
     if (_token == null || _token.isEmpty) {
       print('token 获取失败');
@@ -28,27 +30,40 @@ class Huawei {
       return;
     }
     final uploadUrl = urlReply['uploadUrl'].stringValue;
+    print('上传地址：$uploadUrl');
     final authCode = urlReply['authCode'].stringValue;
     //上传APK
     final apkReply = await _uploadApk(apk, uploadUrl, authCode);
-    final ifSuccess = apkReply['UploadFileRsp']['ifSuccess'].integerValue == 1;
+    final uploadFileRsp = apkReply['result']['UploadFileRsp'];
+    final ifSuccess = uploadFileRsp['ifSuccess'].integerValue == 1;
     print('huawei apk： 上传${ifSuccess ? '成功' : '失败'}');
     if (!ifSuccess) return;
-    final fileInfoList = apkReply['UploadFileRsp']['fileInfoList'].listObject;
+    final fileInfo = uploadFileRsp['fileInfoList'].listValue.first;
+    final fileDestUrl = fileInfo['fileDestUlr'].stringValue;
     //刷新APK
-    final refreshReply = await _refreshApk(fileInfoList);
+    final refreshReply = await _refreshApk(apkName, fileDestUrl);
+    print(refreshReply.rawString());
     if (refreshReply['ret']['code'].integer != 0) {
-      print(refreshReply['ret']['msg'].stringValue);
+      print('刷新APK:${refreshReply['ret']['msg'].stringValue}');
       return;
     }
+    print('刷新APK成功');
+
     //更新文案
     final descReply = await _updateInfo(updateDesc);
     if (descReply['ret']['code'].integer != 0) {
-      print(descReply['ret']['msg'].stringValue);
+      print('更新文案:${descReply['ret']['msg'].stringValue}');
       return;
     }
+
+    print('更新文案成功');
+
     final result = await _publish();
-    print(result['msg'].stringValue);
+    if (result['ret']['code'].integer != 0) {
+      print('发布:${result['ret']['msg'].stringValue}');
+      return;
+    }
+    print('发布成功');
   }
 
   ///
@@ -126,13 +141,18 @@ class Huawei {
   ///
   /// 刷新应用文件信息
   ///
-  Future<JSON> _refreshApk(List fileInfoList) async {
+  Future<JSON> _refreshApk(String fileName, String fileDestUrl) async {
     return _request(
       method: 'put',
       path: '/publish/v2/app-file-info',
       data: {
         'fileType': 5,
-        'files': fileInfoList,
+        'files': [
+          {
+            'fileName': fileName,
+            'fileDestUrl': fileDestUrl,
+          }
+        ],
       },
     );
   }
@@ -144,7 +164,10 @@ class Huawei {
     return _request(
       method: 'put',
       path: '/publish/v2/app-language-info',
-      data: {'newFeatures': updateDesc},
+      data: {
+        'lang': 'zh-CN',
+        'newFeatures': updateDesc,
+      },
     );
   }
 
