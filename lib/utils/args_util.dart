@@ -1,13 +1,6 @@
 import 'package:args/args.dart';
 
-ArgParser getCommonArgs() {
-  final argParser = ArgParser();
-  argParser.addFlag(
-    'help',
-    abbr: 'h',
-    negatable: false,
-    help: 'Print this usage information',
-  );
+void setCommonArgs(ArgParser argParser) {
   argParser.addOption(
     'file',
     abbr: 'f',
@@ -23,7 +16,6 @@ ArgParser getCommonArgs() {
     abbr: 't',
     help: 'Description of new features about this update in txt file',
   );
-  return argParser;
 }
 
 ///
