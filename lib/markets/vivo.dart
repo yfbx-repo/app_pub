@@ -84,7 +84,10 @@ class VIVO {
     );
 
     if (json['code'].integer != 0 || json['subCode'].string != '0') {
-      print('${json['msg']}');
+      print('''
+    -----VIVO-----
+    查询失败：${json['msg'].stringValue}
+    ''');
       return;
     }
     final saleStatus = json['data']['saleStatus'].integerValue;

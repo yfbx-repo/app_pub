@@ -51,7 +51,10 @@ class Xiaomi {
       'userName': _userName,
     });
 
-    print(json.rawString());
+    print('''
+    -----小米-----
+    ${json['message'].stringValue}
+    ''');
   }
 
   ///
