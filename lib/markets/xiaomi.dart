@@ -91,7 +91,7 @@ class Xiaomi {
     final sign = JSON({'password': _password, 'sig': sigs});
 
     //将组装好的加密参数进行RSA加密，并添加到最终参数中
-    formMap['SIG'] = RSAEncode(sign.rawString(), _pubKey);
+    formMap['SIG'] = encryptRSA(sign.rawString(), _pubKey);
 
     try {
       final response = await Dio().post(
