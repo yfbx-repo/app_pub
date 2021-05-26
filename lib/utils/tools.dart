@@ -23,4 +23,5 @@ String readFile(String path) {
   if (txtFile.existsSync()) {
     return txtFile.readAsStringSync();
   }
+  return '';
 }
