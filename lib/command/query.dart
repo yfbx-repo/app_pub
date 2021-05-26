@@ -19,6 +19,11 @@ class QueryCommand extends Command {
       abbr: 'p',
       help: 'package name of you app',
     );
+    argParser.addOption(
+      'appId',
+      abbr: 'i',
+      help: 'huawei app id',
+    );
   }
 
   @override
@@ -35,7 +40,8 @@ class QueryCommand extends Command {
     }
 
     final package = argResults.getString('package');
-    huawei.query();
+    final appId = argResults.getString('appId');
+    huawei.query(appId);
     xiaomi.query(package);
     vivo.query(package);
   }

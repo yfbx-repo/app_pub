@@ -7,6 +7,11 @@ void setCommonArgs(ArgParser argParser) {
     help: 'APK file path',
   );
   argParser.addOption(
+    'appId',
+    abbr: 'i',
+    help: 'huawei app id',
+  );
+  argParser.addOption(
     'desc',
     abbr: 'd',
     help: 'Description of new features about this update',

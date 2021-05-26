@@ -11,10 +11,12 @@ Huawei _initHuawei() => Huawei._();
 
 class Huawei {
   final _serverUrl = 'https://connect-api.cloud.huawei.com/api';
+  var _appId = '';
   var _token = '';
   Huawei._();
 
-  Future update(File apk, String updateDesc) async {
+  Future update(File apk, String appId, String updateDesc) async {
+    _appId = appId;
     final apkName = path.basename(apk.path);
     _token = await _getToken();
     if (_token == null || _token.isEmpty) {
@@ -69,7 +71,8 @@ class Huawei {
   ///
   /// 查询
   ///
-  Future query() async {
+  Future query(String appId) async {
+    _appId = appId;
     _token = await _getToken();
     if (_token == null || _token.isEmpty) {
       print('token 获取失败');
@@ -188,7 +191,7 @@ class Huawei {
       '$_serverUrl$path',
       data: data,
       queryParameters: {
-        'appId': configs.appId,
+        'appId': _appId,
         if (params != null) ...params,
       },
       options: Options(

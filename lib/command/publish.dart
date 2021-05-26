@@ -51,6 +51,7 @@ class PublishCommand extends Command {
     final onlyHuawei = argResults.getBool('huawei');
     final onlyXiaomi = argResults.getBool('xiaomi');
     final file = argResults.getString('file');
+    final appId = argResults.getString('appId');
     final desc = argResults.getString('desc');
     final txt = argResults.getString('txt');
 
@@ -70,7 +71,7 @@ class PublishCommand extends Command {
       return;
     }
     if (onlyHuawei) {
-      huawei.update(apk, updateDesc);
+      huawei.update(apk, appId, updateDesc);
       return;
     }
     if (onlyXiaomi) {
@@ -79,12 +80,12 @@ class PublishCommand extends Command {
     }
 
     //publish to all platform
-    updateAll(apk, updateDesc);
+    updateAll(apk, appId, updateDesc);
   }
 
-  void updateAll(File apk, String updateDesc) async {
+  void updateAll(File apk, String appId, String updateDesc) async {
     print('\n--> huawei');
-    await huawei.update(apk, updateDesc);
+    await huawei.update(apk, appId, updateDesc);
     print('\n--> vivo');
     await vivo.update(apk, updateDesc);
     print('\n--> xiaomi');
