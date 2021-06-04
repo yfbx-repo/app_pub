@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:args/src/arg_parser.dart';
-import 'package:market/markets/huawei.dart';
-import 'package:market/markets/vivo.dart';
-import 'package:market/markets/xiaomi.dart';
-import 'package:market/utils/tools.dart';
 
+import '../markets/huawei.dart';
+import '../markets/vivo.dart';
+import '../markets/xiaomi.dart';
+import '../utils/tools.dart';
 import 'cmd_base.dart';
 
 class PublishCommand extends BaseCmd {

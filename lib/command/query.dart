@@ -1,8 +1,9 @@
 import 'package:args/src/arg_parser.dart';
-import 'package:market/command/cmd_base.dart';
-import 'package:market/markets/huawei.dart';
-import 'package:market/markets/vivo.dart';
-import 'package:market/markets/xiaomi.dart';
+
+import '../command/cmd_base.dart';
+import '../markets/huawei.dart';
+import '../markets/vivo.dart';
+import '../markets/xiaomi.dart';
 
 class QueryCommand extends BaseCmd {
   @override

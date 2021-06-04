@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:path/path.dart' as path;
+import 'package:path/path.dart' as _path;
 
 ///
 /// 在当前工作目录下查找APK文件
@@ -12,7 +12,7 @@ File findApkInCurrentDir() {
         followLinks: false, //不包含链接
       )
       .firstWhere(
-        (file) => path.extension(file.path) == '.apk',
+        (file) => _path.extension(file.path) == '.apk',
         orElse: () => null,
       );
 }

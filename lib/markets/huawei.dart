@@ -2,8 +2,9 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:g_json/g_json.dart';
-import 'package:market/utils/configs.dart';
-import 'package:path/path.dart' as path;
+import 'package:path/path.dart' as _path;
+
+import '../utils/configs.dart';
 
 final huawei = _initHuawei();
 
@@ -17,7 +18,7 @@ class Huawei {
 
   Future update(File apk, String appId, String updateDesc) async {
     _appId = appId;
-    final apkName = path.basename(apk.path);
+    final apkName = _path.basename(apk.path);
     _token = await _getToken();
     if (_token == null || _token.isEmpty) {
       print('token 获取失败');
