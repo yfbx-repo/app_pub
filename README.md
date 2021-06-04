@@ -25,7 +25,8 @@ Run "app help <command>" for more information about a command.
 ```
 > dart2native  bin\main.dart
 ```
-会在main.dart同级目录下生成 main.exe,文件名可修改
+windows下会在main.dart同级目录下生成 main.exe,文件名可修改    
+其他系统可查看dart2native命令生成对应的可执行文件
 
 2. 在可执行程序同级目录运行命令，或者配置环境变量    
 ```
