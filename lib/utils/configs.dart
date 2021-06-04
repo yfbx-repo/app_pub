@@ -11,7 +11,7 @@ class Configs {
   JSON _json;
 
   Configs._() {
-    final filePath = '${env.currentPath}configs.json';
+    final filePath = 'D:\\demos\\app_pub\\configs.json';
     final jsonStr = File(filePath).readAsStringSync();
     _json = JSON.parse(jsonStr);
   }
