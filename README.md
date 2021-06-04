@@ -5,7 +5,7 @@
 根据configs.dart自行配置各平台信息    
 
 
-### dart 插件  
+### 方式一  
 1. 下载项目，修改配置，激活插件
 ```
 pub global activate --source path ./
@@ -20,7 +20,7 @@ Usage: app <command> [arguments]
 Run "app help <command>" for more information about a command.
 ```
     
-### native 可执行程序  
+### 方式二
 1. 生成可执行程序
 ```
 > dart2native  bin\main.dart
