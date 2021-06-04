@@ -1,19 +1,18 @@
-import 'dart:async';
-
-import 'package:args/command_runner.dart';
+import 'package:args/src/arg_parser.dart';
+import 'package:market/command/cmd_base.dart';
 import 'package:market/markets/huawei.dart';
 import 'package:market/markets/vivo.dart';
 import 'package:market/markets/xiaomi.dart';
-import 'package:market/utils/args_util.dart';
 
-class QueryCommand extends Command {
+class QueryCommand extends BaseCmd {
   @override
   String get description => 'query app status';
 
   @override
   String get name => 'query';
 
-  QueryCommand() {
+  @override
+  void buildArgs(ArgParser argParser) {
     argParser.addOption(
       'package',
       abbr: 'p',
@@ -26,21 +25,17 @@ class QueryCommand extends Command {
     );
   }
 
-  @override
-  FutureOr<bool> run() {
-    _runCommand();
-    return true;
-  }
+  String get package => getString('package');
+  String get appId => getString('appId');
 
-  void _runCommand() {
+  @override
+  void runCommand() {
     final args = argResults.arguments;
     if (args == null || args.isEmpty) {
       printUsage();
       return;
     }
 
-    final package = argResults.getString('package');
-    final appId = argResults.getString('appId');
     huawei.query(appId);
     xiaomi.query(package);
     vivo.query(package);

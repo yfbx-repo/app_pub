@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:g_json/g_json.dart';
-import 'package:market/utils/apk.dart';
+import 'package:market/utils/apk_file.dart';
 import 'package:market/utils/configs.dart';
 import 'package:market/utils/encrypt_util.dart';
 

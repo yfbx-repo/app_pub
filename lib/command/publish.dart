@@ -1,22 +1,42 @@
-import 'dart:async';
 import 'dart:io';
 
-import 'package:args/command_runner.dart';
+import 'package:args/src/arg_parser.dart';
 import 'package:market/markets/huawei.dart';
 import 'package:market/markets/vivo.dart';
 import 'package:market/markets/xiaomi.dart';
-import 'package:market/utils/args_util.dart';
 import 'package:market/utils/tools.dart';
 
-class PublishCommand extends Command {
+import 'cmd_base.dart';
+
+class PublishCommand extends BaseCmd {
   @override
   String get description => 'publish app to app market';
 
   @override
   String get name => 'publish';
 
-  PublishCommand() {
-    setCommonArgs(argParser);
+  @override
+  void buildArgs(ArgParser argParser) {
+    argParser.addOption(
+      'file',
+      abbr: 'f',
+      help: 'APK file path',
+    );
+    argParser.addOption(
+      'appId',
+      abbr: 'i',
+      help: 'huawei app id',
+    );
+    argParser.addOption(
+      'desc',
+      abbr: 'd',
+      help: 'Description of new features about this update',
+    );
+    argParser.addOption(
+      'txt',
+      abbr: 't',
+      help: 'Description of new features about this update in txt file',
+    );
     argParser.addFlag(
       'vivo',
       negatable: false,
@@ -34,26 +54,21 @@ class PublishCommand extends Command {
     );
   }
 
-  @override
-  FutureOr<bool> run() {
-    _runCommand();
-    return true;
-  }
+  bool get onlyVivo => getBool('vivo');
+  bool get onlyHuawei => getBool('huawei');
+  bool get onlyXiaomi => getBool('xiaomi');
+  String get file => getString('file');
+  String get appId => getString('appId');
+  String get desc => getString('desc');
+  String get txt => getString('txt');
 
-  void _runCommand() {
+  @override
+  void runCommand() {
     final args = argResults.arguments;
     if (args == null || args.isEmpty) {
       printUsage();
       return;
     }
-
-    final onlyVivo = argResults.getBool('vivo');
-    final onlyHuawei = argResults.getBool('huawei');
-    final onlyXiaomi = argResults.getBool('xiaomi');
-    final file = argResults.getString('file');
-    final appId = argResults.getString('appId');
-    final desc = argResults.getString('desc');
-    final txt = argResults.getString('txt');
 
     //check apk file
     final apk = file.isEmpty ? findApkInCurrentDir() : File(file);
