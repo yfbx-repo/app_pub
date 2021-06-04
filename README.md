@@ -14,9 +14,9 @@ pub global activate --source path ./
 ```
 > app --help
 
-Usage: apk <command> [arguments]
+Usage: app <command> [arguments]
 ...
-Run "apk help <command>" for more information about a command.
+Run "app help <command>" for more information about a command.
 ```
     
 ### native 可执行程序  
