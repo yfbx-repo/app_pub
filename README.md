@@ -6,7 +6,7 @@
 
 
 ### dart 插件  
-1. 激活插件
+1. 下载项目，修改配置，激活插件
 ```
 pub global activate --source path ./
 ```
