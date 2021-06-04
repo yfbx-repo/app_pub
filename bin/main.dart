@@ -1,6 +1,6 @@
 import 'package:args/command_runner.dart';
-import 'package:market/command/publish.dart';
-import 'package:market/command/query.dart';
+import 'package:app_pub/command/publish.dart';
+import 'package:app_pub/command/query.dart';
 
 void main(List<String> args) {
   final runner = CommandRunner('app', '');
