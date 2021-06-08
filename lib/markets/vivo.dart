@@ -34,7 +34,7 @@ class VIVO {
     print(md5Code);
     print('解析Package信息:');
     final pkgInfo = apk.packageInfo;
-    final packageName = pkgInfo['packageName'].stringValue;
+    final packageName = pkgInfo['packageName'];
     final versionCode = pkgInfo['versionCode'];
 
     print('上传APK...');

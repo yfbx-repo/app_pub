@@ -43,8 +43,9 @@ extension ApkFile on FileSystemEntity {
   /// 需要配置aapt环境变量，位于AndroidSDK\build-tools目录下
   ///
   String _getApkInfo(String filterKey) {
+    print(path);
     final filter =
-        Platform.isWindows ? '|findStr filterKey' : '|grep filterKey';
+        Platform.isWindows ? '|findStr $filterKey' : '|grep $filterKey';
     final result = runSync('aapt dump badging $path $filter', './');
     final info = result.stdout.toString().trim();
     print(info);
