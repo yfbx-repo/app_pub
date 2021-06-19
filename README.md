@@ -5,35 +5,30 @@
 根据configs.dart自行配置各平台信息    
 
 
-### 方式一  
+## 使用方法：
 1. 下载项目，修改配置，激活插件
 ```
 pub global activate --source path ./
 ```
 
-2. 运行脚本,测试命令
+2. 运行脚本,测试命令,可用命令：
 ```
-> app --help
+# 查询app状态
+> app_query [args] 
 
-Usage: app <command> [arguments]
-...
-Run "app help <command>" for more information about a command.
+# 发布
+> app_pub [args]
+
+# 各应用市场单独查询和发布
+
+> xiaomi query <package>
+> xiaomi publish <apk> <desc>
+
+> vivo query <package>
+> vivo publish <apk> <desc>
+
+> huawei query <appId>
+> huawei publish <appId> <apk> <desc>
+
 ```
     
-### 方式二
-1. 生成可执行程序
-```
-> dart2native  bin\main.dart
-```
-windows下会在main.dart同级目录下生成 main.exe,文件名可修改    
-其他系统可查看dart2native命令生成对应的可执行文件
-
-2. 在可执行程序同级目录运行命令，或者配置环境变量    
-```
-> app --help
-
-Usage: app <command> [arguments]
-...
-Run "app help <command>" for more information about a command.
-```
-如文件名为main.exe,则命令为`main --help`,如文件名为app_pub.exe,则命令为`app_pub --help`
