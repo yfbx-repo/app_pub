@@ -9,9 +9,7 @@ void main(List<String> args) {
   final hwAppId = '100354477';
   final updateDesc = '修复已知问题，优化用户体验';
 
-  //huawei.update(apk, hwAppId, updateDesc);
-
-  //xiaomi.update(apk, updateDesc);
-
+  huawei.update(apk, hwAppId, updateDesc);
+  xiaomi.update(apk, updateDesc);
   vivo.update(apk, updateDesc);
 }
