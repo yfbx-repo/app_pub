@@ -21,4 +21,5 @@ dev_dependencies:
 
 
 executables:
-  app: main
+  app_pub: app_publish
+  app_query: app_query

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:args/args.dart';
 import 'package:path/path.dart' as _path;
 
 ///
@@ -24,4 +25,16 @@ String readFile(String path) {
     return txtFile.readAsStringSync();
   }
   return '';
+}
+
+extension Args on ArgResults {
+  String getString(String key, {String defaultValue = ''}) {
+    final value = this[key];
+    return value ?? defaultValue;
+  }
+
+  bool getBool(String key, {bool defaultValue = false}) {
+    final value = this[key];
+    return value ?? defaultValue;
+  }
 }
