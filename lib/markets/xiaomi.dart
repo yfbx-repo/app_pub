@@ -39,7 +39,7 @@ class Xiaomi {
 
     print('''
     -----小米-----
-    ${json.rawString()}
+    ${json['message'].stringValue}
     ''');
   }
 
