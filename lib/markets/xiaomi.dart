@@ -54,7 +54,9 @@ class Xiaomi {
 
     print('''
     -----小米-----
-    ${json['message'].stringValue}
+    message：${json['message'].stringValue}
+    versionName: ${json['packageInfo']['versionName'].stringValue}
+    是否允许版本更新: ${json['updateVersion'].stringValue}
     ''');
   }
 
