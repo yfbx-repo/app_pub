@@ -2,8 +2,6 @@ import 'dart:io';
 
 import 'package:g_json/g_json.dart';
 
-import 'env.dart';
-
 ///
 /// 配置信息
 ///
@@ -24,7 +22,7 @@ class Configs {
   String get username => _json['xiaomi']['username'].stringValue;
   String get password => _json['xiaomi']['password'].stringValue;
   String get pubKey =>
-      File('${env.currentPath}xiaomi_pub_key.cer').readAsStringSync();
+      File('D:\\demos\\app_pub\\xiaomi_pub_key.cer').readAsStringSync();
 
   ///Huawei
   // String get appId => _json['huawei']['appId'].stringValue;
