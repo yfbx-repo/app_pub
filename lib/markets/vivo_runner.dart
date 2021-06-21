@@ -114,11 +114,13 @@ class VivoRunner extends BaseRunner {
       return;
     }
     final saleStatus = json['data']['saleStatus'].integerValue;
+    final versionName = json['data']['versionName'].stringValue;
     final status = json['data']['status'].integerValue;
     final unPassReason = json['data']['unPassReason'].stringValue;
 
     print('''
     -----VIVO-----
+    Version：$versionName
     上架状态：${getSaleStatus(saleStatus)}
     审核状态：${getStatus(status)}
     审核意见：$unPassReason
