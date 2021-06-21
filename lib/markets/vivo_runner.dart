@@ -56,7 +56,7 @@ class VivoRunner extends BaseRunner {
     final apkName = _path.basename(apk.path);
     final filePart = await MultipartFile.fromFile(apk.path, filename: apkName);
     print('获取文件MD5:');
-    final md5Code = fileMD5(apk.readAsBytesSync());
+    final md5Code = encryptMD5(apk.readAsBytesSync());
     print(md5Code);
 
     print('上传APK...');

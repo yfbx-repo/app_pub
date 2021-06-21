@@ -1,8 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:args/args.dart';
 import 'package:dio/dio.dart';
 import 'package:g_json/g_json.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:path/path.dart' as _path;
 
 import '../base_runner.dart';
 import '../utils/configs.dart';
@@ -52,10 +55,10 @@ class XiaomiRunner extends BaseRunner {
   ) async {
     final json = await post(
       method: '/dev/push',
-      files: {'apk': apk},
+      apk: apk,
       params: {
-        'synchroType': 1,
         'userName': _userName,
+        'synchroType': 1,
         'appInfo': {
           'appName': appName,
           'packageName': package,
@@ -93,35 +96,35 @@ class XiaomiRunner extends BaseRunner {
   Future<JSON> post({
     String method,
     Map<String, dynamic> params,
-    Map<String, File> files,
+    File apk,
   }) async {
     final formMap = <String, dynamic>{};
+    final sigs = [];
+
     //参数转json字符串
     final requestData = JSON(params).rawString();
     formMap['RequestData'] = requestData;
+    sigs.add({
+      'name': 'RequestData',
+      'hash': encryptMD5(utf8.encode(requestData)),
+    });
 
-    //参数签名
-    final sigs = [
-      {'name': 'RequestData', 'hash': MD5(requestData)}
-    ];
-
-    //获取文件MD5值,并将文件转换为MultipartFile添加到参数中
-    if (files != null && files.isNotEmpty) {
-      files.forEach((key, value) {
-        //读取文件
-        final fileBytes = value.readAsBytesSync();
-        //添加到参数中
-        formMap[key] = MultipartFile.fromFile(value.path);
-        //获取MD5值
-        sigs.add({'name': key, 'hash': fileMD5(fileBytes)});
-      });
+    //APK
+    if (apk != null) {
+      final fileBytes = apk.readAsBytesSync();
+      formMap['apk'] = MultipartFile.fromBytes(
+        fileBytes,
+        filename: _path.basename(apk.path),
+        contentType: MediaType.parse('application/octet-stream'),
+      );
+      sigs.add({'name': 'apk', 'hash': encryptMD5(fileBytes)});
     }
 
     //组装加密参数
     final sign = JSON({'password': _password, 'sig': sigs});
 
     //将组装好的加密参数进行RSA加密，并添加到最终参数中
-    formMap['SIG'] = encryptRSA(sign.rawString(), _pubKey);
+    formMap['SIG'] = x509RSA(sign.rawString(), _pubKey);
 
     try {
       final response = await Dio().post(

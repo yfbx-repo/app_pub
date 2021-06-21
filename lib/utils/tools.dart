@@ -30,23 +30,16 @@ String readFile(String path) {
 }
 
 ///
-/// 字符串MD5
-///
-String MD5(String text) {
-  return md5.convert(utf8.encode(text)).toString();
-}
-
-///
 /// 文件MD5
 ///
-String fileMD5(List<int> data) {
+String encryptMD5(List<int> data) {
   return md5.convert(data).toString();
 }
 
 ///
 /// RSA 加密
 ///
-String encryptRSA(String text, String cert) {
+String x509RSA(String text, String cert) {
   final x509 = parsePem(cert).first as X509Certificate;
   final publicKey = x509.publicKey;
   final encrypter = publicKey.createEncrypter(algorithms.encryption.rsa.pkcs1);
