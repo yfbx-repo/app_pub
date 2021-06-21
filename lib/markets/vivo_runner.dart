@@ -3,53 +3,75 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:args/args.dart';
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:g_json/g_json.dart';
 import 'package:path/path.dart' as _path;
 
-import '../utils/apk_file.dart';
+import '../base_runner.dart';
 import '../utils/configs.dart';
-import '../utils/encrypt_util.dart';
+import '../utils/tools.dart';
 
-final vivo = _initVivo();
-
-VIVO _initVivo() => VIVO._();
-
-class VIVO {
+class VivoRunner extends BaseRunner {
   final _serverUrl = 'https://developer-api.vivo.com.cn/router/rest';
   final _accessKey = configs.accessKey;
   final _accessSecret = configs.accessSecret;
 
-  VIVO._();
+  VivoRunner(ArgParser parser) : super(parser);
+
+  @override
+  void runCommand() {
+    if (package.isEmpty) {
+      print('Error: package name is required!');
+      printUsage();
+    }
+
+    ///query
+    if (!publish) {
+      query(package);
+      return;
+    }
+
+    ///publish
+    if (versionCode.isEmpty) {
+      print('Error: APP version code is required!');
+      printUsage();
+      return;
+    }
+    if (isArgsValid()) {
+      update(File(apk), package, versionCode, updateDesc);
+    }
+  }
 
   ///
   /// 更新
   ///
-  Future update(File apk, String updateDesc) async {
+  Future update(
+    File apk,
+    String package,
+    String versionCode,
+    String updateDesc,
+  ) async {
     final apkName = _path.basename(apk.path);
     final filePart = await MultipartFile.fromFile(apk.path, filename: apkName);
     print('获取文件MD5:');
     final md5Code = fileMD5(apk.readAsBytesSync());
     print(md5Code);
-    print('解析Package信息:');
-    final pkgInfo = apk.packageInfo;
-    final packageName = pkgInfo['packageName'];
-    final versionCode = pkgInfo['versionCode'];
 
     print('上传APK...');
     final json = await post(
       method: 'app.upload.apk.app',
       file: filePart,
       args: {
-        'packageName': packageName,
+        'packageName': package,
         'fileMd5': md5Code,
       },
     );
 
     //上传结果
     if (json['code'].integer != 0 || json['subCode'].string != '0') {
-      print('VIVO: ${json['msg']}');
+      print('VIVO: ${json['msg'].stringValue}');
       return;
     }
 
@@ -63,7 +85,7 @@ class VIVO {
     final response = await post(
       method: 'app.sync.update.app',
       args: {
-        'packageName': packageName,
+        'packageName': package,
         'versionCode': versionCode,
         'apk': serialNumber,
         'fileMd5': md5Code,

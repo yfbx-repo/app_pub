@@ -1,20 +1,38 @@
 import 'dart:io';
 
+import 'package:args/src/arg_parser.dart';
 import 'package:dio/dio.dart';
 import 'package:g_json/g_json.dart';
 import 'package:path/path.dart' as _path;
 
+import '../base_runner.dart';
 import '../utils/configs.dart';
 
-final huawei = _initHuawei();
-
-Huawei _initHuawei() => Huawei._();
-
-class Huawei {
+class HuaweiRunner extends BaseRunner {
   final _serverUrl = 'https://connect-api.cloud.huawei.com/api';
   var _appId = '';
   var _token = '';
-  Huawei._();
+
+  HuaweiRunner(ArgParser parser) : super(parser);
+
+  @override
+  void runCommand() {
+    if (appId.isEmpty) {
+      print('Error: app id is required!');
+      printUsage();
+    }
+
+    ///query
+    if (!publish) {
+      query(appId);
+      return;
+    }
+
+    ///publish
+    if (isArgsValid()) {
+      update(File(apk), appId, updateDesc);
+    }
+  }
 
   Future update(File apk, String appId, String updateDesc) async {
     _appId = appId;

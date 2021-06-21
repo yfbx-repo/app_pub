@@ -1,28 +1,55 @@
 import 'dart:io';
 
+import 'package:args/args.dart';
 import 'package:dio/dio.dart';
 import 'package:g_json/g_json.dart';
 
-import '../utils/apk_file.dart';
+import '../base_runner.dart';
 import '../utils/configs.dart';
-import '../utils/encrypt_util.dart';
+import '../utils/tools.dart';
 
-final xiaomi = _initXiaomi();
-
-Xiaomi _initXiaomi() => Xiaomi._();
-
-class Xiaomi {
+class XiaomiRunner extends BaseRunner {
   final _serverUrl = 'http://api.developer.xiaomi.com/devupload';
   final _pubKey = configs.pubKey;
   final _password = configs.password;
   final _userName = configs.username;
 
-  Xiaomi._();
+  XiaomiRunner(ArgParser parser) : super(parser);
+
+  @override
+  void runCommand() {
+    if (package.isEmpty) {
+      print('Error: package name is required!');
+      printUsage();
+    }
+
+    ///query
+    if (!publish) {
+      query(package);
+      return;
+    }
+
+    /// publish
+    if (name.isEmpty) {
+      print('Error: APP name is required!');
+      printUsage();
+      return;
+    }
+
+    if (isArgsValid()) {
+      update(File(apk), name, package, updateDesc);
+    }
+  }
 
   ///
   ///更新
   ///
-  Future update(File apk, String updateDesc) async {
+  Future update(
+    File apk,
+    String appName,
+    String package,
+    String updateDesc,
+  ) async {
     final json = await post(
       method: '/dev/push',
       files: {'apk': apk},
@@ -30,8 +57,8 @@ class Xiaomi {
         'synchroType': 1,
         'userName': _userName,
         'appInfo': {
-          'appName': apk.appName,
-          'packageName': apk.packageName,
+          'appName': appName,
+          'packageName': package,
           'updateDesc': updateDesc,
         },
       },
@@ -84,7 +111,7 @@ class Xiaomi {
         //读取文件
         final fileBytes = value.readAsBytesSync();
         //添加到参数中
-        formMap[key] = MultipartFile.fromBytes(fileBytes);
+        formMap[key] = MultipartFile.fromFile(value.path);
         //获取MD5值
         sigs.add({'name': key, 'hash': fileMD5(fileBytes)});
       });

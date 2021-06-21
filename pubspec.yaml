@@ -22,8 +22,6 @@ dev_dependencies:
 
 
 executables:
-  app_pub: app_publish
-  app_query: app_query
   xiaomi: xiaomi
   huawei: huawei
   vivo: vivo
