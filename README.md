@@ -11,23 +11,16 @@
 pub global activate --source path ./
 ```
 
-2. 运行脚本,测试命令,可用命令：
+2. 运行脚本,测试命令：
 ```
 # 查询app状态
-> app_query [args] 
+> xiaomi query <package>
+> vivo query <package>
+> huawei query <appId>
 
 # 发布
-> app_pub [args]
-
-# 各应用市场单独查询和发布
-
-> xiaomi query <package>
 > xiaomi publish <apk> <desc>
-
-> vivo query <package>
 > vivo publish <apk> <desc>
-
-> huawei query <appId>
 > huawei publish <appId> <apk> <desc>
 
 ```

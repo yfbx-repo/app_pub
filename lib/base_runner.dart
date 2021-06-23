@@ -7,17 +7,6 @@ abstract class BaseRunner {
   ArgResults args;
 
   BaseRunner(this.parser) {
-    parser.addFlag(
-      'help',
-      abbr: 'h',
-      negatable: false,
-      help: 'Print this usage info.',
-    );
-    parser.addFlag(
-      'publish',
-      negatable: false,
-      help: 'Publish app to app market.',
-    );
     parser.addOption(
       'apk',
       abbr: 'a',
@@ -32,6 +21,18 @@ abstract class BaseRunner {
       'txt',
       abbr: 't',
       help: 'Description of new features about this update in txt file.',
+    );
+    parser.addFlag(
+      'help',
+      abbr: 'h',
+      negatable: false,
+      help: 'Print this usage info.',
+    );
+    parser.addFlag(
+      'publish',
+      negatable: false,
+      help:
+          'true: Publish app to app market. false: Query app info from market.',
     );
   }
 
