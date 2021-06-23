@@ -14,14 +14,14 @@ pub global activate --source path ./
 2. 运行脚本,测试命令：
 ```
 # 查询app状态
-> xiaomi query <package>
-> vivo query <package>
-> huawei query <appId>
+> xiaomi -p <package name>
+> vivo -p <package name>
+> huawei -i <huawei appId>
 
 # 发布
-> xiaomi publish <apk> <desc>
-> vivo publish <apk> <desc>
-> huawei publish <appId> <apk> <desc>
+> xiaomi --publish <args>
+> vivo --publish <args>
+> huawei --publish <args>
 
 ```
     
